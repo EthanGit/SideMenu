@@ -4,7 +4,7 @@
 //
 //  Created by Vidhyadharan Mohanram on 11/06/19.
 //  Copyright © 2019 Vid. All rights reserved.
-//
+//  Override by Ethan 2021/01/05
 
 import SwiftUI
 
@@ -64,66 +64,12 @@ public struct SideMenu : View {
     }
     
     public var body: some View {
-        return
-            GeometryReader { geometry in
-                ZStack {
-                    NavigationView {
-                        if (self.leftMenu != nil && self.rightMenu != nil) {
-                            self.sideMenuCenterView
-                                .opacity(1)
-                                .transition(.opacity)
-                                .navigationBarItems(
-                                    leading: Button(action: {
-                                        withAnimation {
-                                            self.sideMenuLeftPanel.toggle()
-                                        }
-                                    }, label: {
-                                        Image(systemName: "sidebar.left")
-                                            .accentColor(.blue)
-                                            .imageScale(.large)
-                                    }),
-                                    trailing: Button(action: {
-                                        withAnimation {
-                                            self.sideMenuRightPanel.toggle()
-                                        }
-                                    }, label: {
-                                        Image(systemName: "sidebar.right")
-                                            .accentColor(.red)
-                                            .imageScale(.large)
-                                    })
-                                )
-                            } else if (self.leftMenu != nil) {
-                                self.sideMenuCenterView
-                                    .opacity(1)
-                                    .transition(.opacity)
-                                    .navigationBarItems(
-                                        leading: Button(action: {
-                                            withAnimation {
-                                                self.sideMenuLeftPanel.toggle()
-                                            }
-                                        }, label: {
-                                            Image(systemName: "sidebar.left")
-                                                .accentColor(.blue)
-                                                .imageScale(.large)
-                                        })
-                                    )
-                            } else if (self.rightMenu != nil) {
-                                self.sideMenuCenterView
-                                    .opacity(1)
-                                    .transition(.opacity)
-                                    .navigationBarItems(
-                                        trailing: Button(action: {
-                                            withAnimation {
-                                                self.sideMenuRightPanel.toggle()
-                                            }
-                                        }, label: {
-                                            Image(systemName: "sidebar.right")
-                                                .accentColor(.red)
-                                                .imageScale(.large)
-                                        })
-                                )
-                            }
-                    }
+        return GeometryReader { geometry in
+            ZStack {
+                self.sideMenuCenterView
+                    .opacity(1)
+                    .transition(.opacity)
+                
                 if self.sideMenuLeftPanel && self.leftMenu != nil {
                     MenuBackgroundView(sideMenuLeftPanel: self.$sideMenuLeftPanel,
                                        sideMenuRightPanel: self.$sideMenuRightPanel,
@@ -154,17 +100,17 @@ public struct SideMenu : View {
                         .zIndex(4)
                 }
             }.gesture(self.panelDragGesture(geometry.size.width))
-                .animation(self.menuAnimation)
-                .onAppear {
-                    self.leftMenuOffsetX = -self.menuXOffset(geometry.size.width)
+            .animation(self.menuAnimation)
+            .onAppear {
+                self.leftMenuOffsetX = -self.menuXOffset(geometry.size.width)
+                self.rightMenuOffsetX = self.menuXOffset(geometry.size.width)
+                self.leftMenuBGOpacity = self.config.menuBGOpacity
+                self.rightMenuBGOpacity = self.config.menuBGOpacity
+                NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { _ in
                     self.rightMenuOffsetX = self.menuXOffset(geometry.size.width)
-                    self.leftMenuBGOpacity = self.config.menuBGOpacity
-                    self.rightMenuBGOpacity = self.config.menuBGOpacity
-                    NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { _ in
-                        self.rightMenuOffsetX = self.menuXOffset(geometry.size.width)
-                        self.leftMenuOffsetX = -self.menuXOffset(geometry.size.width)
-                    }
+                    self.leftMenuOffsetX = -self.menuXOffset(geometry.size.width)
                 }
+            }
             .environment(\.sideMenuGestureModeKey, self.$sideMenuGestureMode)
             .environment(\.sideMenuCenterViewKey, self.$sideMenuCenterView)
             .environment(\.sideMenuLeftPanelKey, self.$sideMenuLeftPanel)
