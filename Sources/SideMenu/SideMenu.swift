@@ -109,8 +109,10 @@ public struct SideMenu : View {
                 NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { _ in
                     self.sideMenuRightPanel = false
                     self.sideMenuLeftPanel = false
-                    self.rightMenuOffsetX = self.menuXOffset(geometry.size.width)
-                    self.leftMenuOffsetX = -self.menuXOffset(geometry.size.width)
+                    self.rightMenuOffsetX = 0
+                    self.leftMenuOffsetX = 0
+//                    self.rightMenuOffsetX = self.menuXOffset(geometry.size.width)
+//                    self.leftMenuOffsetX = -self.menuXOffset(geometry.size.width)
                 }
             }
             .environment(\.sideMenuGestureModeKey, self.$sideMenuGestureMode)
