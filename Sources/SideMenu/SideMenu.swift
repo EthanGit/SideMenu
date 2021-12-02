@@ -4,7 +4,7 @@
 //
 //  Created by Vidhyadharan Mohanram on 11/06/19.
 //  Copyright © 2019 Vid. All rights reserved.
-//  Override by Ethan 2021/01/05
+//  Override by Ethan 2021/12/02
 
 import SwiftUI
 
@@ -107,6 +107,8 @@ public struct SideMenu : View {
                 self.leftMenuBGOpacity = self.config.menuBGOpacity
                 self.rightMenuBGOpacity = self.config.menuBGOpacity
                 NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: OperationQueue.main) { _ in
+                    self.sideMenuRightPanel = false
+                    self.sideMenuLeftPanel = false
                     self.rightMenuOffsetX = self.menuXOffset(geometry.size.width)
                     self.leftMenuOffsetX = -self.menuXOffset(geometry.size.width)
                 }
